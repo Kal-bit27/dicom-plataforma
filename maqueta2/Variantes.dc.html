@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>DICOM · Fotos por variante</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+body { margin: 0; }
+a { color: #0D6B45; }
+a:hover { color: #094A30; }
+.pg { font-family: 'Archivo', system-ui, sans-serif; color: #0E1F1A; background: #FFFFFF; font-size: 17px; line-height: 1.5; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+.pg *, .pg *::before, .pg *::after { box-sizing: border-box; }
+.wrap { max-width: 1240px; margin: 0 auto; padding: 0 32px; }
+.mono { font-family: 'IBM Plex Mono', ui-monospace, monospace; }
+.kicker { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12.5px; letter-spacing: .12em; text-transform: uppercase; color: #0D6B45; }
+
+.top { background: #0A1D17; color: #DCE5E0; font-size: 14px; text-align: center; padding: 9px 16px; }
+.top b { color: #7FE3B8; font-weight: 600; }
+.hdr { position: sticky; top: 0; z-index: 30; background: rgba(255,255,255,.82); -webkit-backdrop-filter: saturate(1.6) blur(14px); backdrop-filter: saturate(1.6) blur(14px); border-bottom: 1px solid rgba(14,31,26,.1); }
+.hdr .wrap { display: flex; align-items: center; gap: 12px 28px; min-height: 72px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 11px; text-decoration: none; color: #0E1F1A; }
+.brand svg { width: 52px; height: 46px; color: #2F3835; }
+.orb { fill: none; stroke: currentColor; stroke-width: 3.2; transition: transform 1s cubic-bezier(.2,.7,.2,1); }
+.o2 { transform: rotate(60deg); }
+.o3 { transform: rotate(120deg); }
+.brand:hover .o2 { transform: rotate(120deg); }
+.brand:hover .o3 { transform: rotate(60deg); }
+.leaf { fill: #11914F; }
+.stem { fill: none; stroke: #11914F; stroke-width: 1.6; stroke-linecap: round; }
+.brand-name { display: block; font-stretch: 85%; font-weight: 700; font-size: 26px; letter-spacing: .03em; line-height: 1; }
+.brand-sub { display: block; font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: .1em; color: #55605B; margin-top: 4px; text-transform: uppercase; }
+.nav { display: flex; gap: 2px; flex-wrap: wrap; margin-left: auto; }
+.nav a { color: #0E1F1A; text-decoration: none; font-weight: 500; font-size: 15.5px; padding: 0 14px; min-height: 44px; display: inline-flex; align-items: center; border-radius: 22px; transition: background .25s ease; }
+.nav a:hover { background: #EEF2EF; color: #0E1F1A; }
+.cart { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px; border-radius: 22px; background: #0E1F1A; color: #FFFFFF; text-decoration: none; font-weight: 500; font-size: 15px; transition: background .25s ease, transform .25s ease; }
+.cart:hover { background: #0D6B45; color: #FFFFFF; transform: translateY(-1px); }
+.cart svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.count { display: inline-flex; align-items: center; justify-content: center; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px; background: #7FE3B8; color: #0A1D17; font-size: 13px; font-weight: 600; animation: pop .45s cubic-bezier(.2,1.6,.4,1) both; }
+@keyframes pop { from { transform: scale(.3); opacity: 0; } to { transform: none; opacity: 1; } }
+
+.crumbs { display: flex; flex-wrap: wrap; gap: 0 8px; padding: 22px 0 0; font-size: 14.5px; color: #55605B; }
+.crumbs a { color: #55605B; text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; }
+.crumbs a:hover { color: #0D6B45; }
+.crumbs span { min-height: 44px; display: inline-flex; align-items: center; }
+
+.main { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr); gap: 56px; align-items: start; padding: 10px 0 96px; }
+@keyframes fade { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+.intro { padding: 72px 0 40px; }
+.intro h1 { font-stretch: 88%; font-weight: 600; font-size: clamp(40px, 5vw, 70px); line-height: 1; letter-spacing: -.025em; margin: 14px 0 14px; max-width: 14em; }
+.intro p { font-size: 19px; color: #3D4A45; max-width: 40em; margin: 0; }
+.vg { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; padding-bottom: 104px; }
+@property --giro { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+.v { position: relative; isolation: isolate; border-radius: 24px; background: #F3F6F3; padding: 20px 22px 24px; overflow: hidden; transition: transform .6s cubic-bezier(.16,.84,.24,1), box-shadow .5s ease, background .4s ease; }
+.v::before { content: ''; position: absolute; inset: 0; z-index: 3; border-radius: inherit; padding: 2px; background: conic-gradient(from var(--giro), rgba(17,145,79,0) 0deg 200deg, #7FE3B8 290deg, #11914F 330deg, rgba(17,145,79,0) 360deg); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0; transition: opacity .45s ease; animation: giro 2.6s linear infinite; pointer-events: none; }
+@keyframes giro { to { --giro: 360deg; } }
+.v:hover { transform: translateY(-6px); background: #EDF5F0; box-shadow: 0 0 0 1.5px rgba(17,145,79,.55), 0 0 34px -2px rgba(31,201,120,.42), 0 30px 60px -30px rgba(13,107,69,.55); }
+.v:hover::before { opacity: 1; }
+.v .im { aspect-ratio: 1; display: grid; place-items: center; }
+.v img { width: 88%; height: 88%; object-fit: contain; mix-blend-mode: multiply; transition: transform 1s cubic-bezier(.16,.84,.24,1); }
+.v:hover img { transform: scale(1.1) rotate(-2deg); }
+.v h2 { font-size: 21px; font-weight: 600; letter-spacing: -.01em; margin: 6px 0 8px; line-height: 1.2; }
+.v .suf { font-family: 'IBM Plex Mono', monospace; font-size: 13.5px; color: #0A5C3B; background: #E4F3EB; border-radius: 10px; padding: 8px 10px; margin: 0 0 10px; }
+.v p { margin: 0; font-size: 15px; color: #3D4A45; }
+@media (max-width: 900px) { .vg { grid-template-columns: repeat(2, minmax(0, 1fr)); } .nav { order: 3; width: 100%; margin-left: 0; } .cart { margin-left: auto; } }
+@media (max-width: 560px) { .vg { grid-template-columns: minmax(0, 1fr); } .wrap { padding: 0 20px; } .brand-sub { display: none; } }
+@media (prefers-reduced-motion: reduce) { .pg *, .pg *::before { animation: none !important; transition: none !important; } }
+.foot { background: #FFFFFF; border-top: 1px solid #E6EBE8; padding: 44px 0 56px; font-size: 15px; color: #55605B; }
+.foot .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 18px 40px; }
+.foot nav { display: flex; flex-wrap: wrap; gap: 4px 22px; }
+.foot a { color: #3D4A45; text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; }
+</style>
+</helmet>
+<div class="pg">
+
+  <div class="top"><b>Envío gratis</b> en productos seleccionados</div>
+
+  <header class="hdr">
+    <div class="wrap">
+      <a class="brand" href="Main.dc.html" aria-label="DICOM, inicio">
+        <svg viewBox="-50 -44 100 88" aria-hidden="true">
+          <ellipse class="orb" rx="46" ry="15"></ellipse>
+          <ellipse class="orb o2" rx="46" ry="15"></ellipse>
+          <ellipse class="orb o3" rx="46" ry="15"></ellipse>
+          <path class="stem" d="M0 0 Q -1.5 5 -4 9"></path>
+          <path class="leaf" transform="rotate(45)" d="M0 0 C -4.5 -2 -6 -6.5 -3 -8 C -1.5 -8.8 0 -7.6 0 -6.4 C 0 -7.6 1.5 -8.8 3 -8 C 6 -6.5 4.5 -2 0 0 Z"></path>
+          <path class="leaf" transform="rotate(135)" d="M0 0 C -4.5 -2 -6 -6.5 -3 -8 C -1.5 -8.8 0 -7.6 0 -6.4 C 0 -7.6 1.5 -8.8 3 -8 C 6 -6.5 4.5 -2 0 0 Z"></path>
+          <path class="leaf" transform="rotate(225)" d="M0 0 C -4.5 -2 -6 -6.5 -3 -8 C -1.5 -8.8 0 -7.6 0 -6.4 C 0 -7.6 1.5 -8.8 3 -8 C 6 -6.5 4.5 -2 0 0 Z"></path>
+          <path class="leaf" transform="rotate(315)" d="M0 0 C -4.5 -2 -6 -6.5 -3 -8 C -1.5 -8.8 0 -7.6 0 -6.4 C 0 -7.6 1.5 -8.8 3 -8 C 6 -6.5 4.5 -2 0 0 Z"></path>
+        </svg>
+        <span>
+          <span class="brand-name">DICOM</span>
+          <span class="brand-sub">Distribuciones Industriales COM</span>
+        </span>
+      </a>
+      <nav class="nav" aria-label="Principal">
+        <a href="Main.dc.html">Catálogo</a>
+        <a href="Main.dc.html">Marcas</a>
+        <a href="Main.dc.html">Cotizador</a>
+        <a href="#cuenta">Mi cuenta</a>
+      </nav>
+      <a class="cart" href="Pago.dc.html">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2.2l2.3 11h10.2l2-8H6.4"></path><circle cx="9.5" cy="19" r="1.3"></circle><circle cx="16.5" cy="19" r="1.3"></circle></svg>
+        Carrito
+        <span class="count" aria-label="piezas en el carrito">2</span>
+      </a>
+    </div>
+  </header>
+
+
+
+  <div class="wrap">
+    <div class="intro">
+      <div class="kicker">Catálogo de fotos</div>
+      <h1>Cada producto toma la foto de su variante.</h1>
+      <p>La tienda lee el sufijo del número de parte y muestra la foto que corresponde: sellado o con tapas, jaula de latón, de acero o de poliamida. La foto con la caja de cada marca se agrega con las imágenes oficiales de la marca.</p>
+    </div>
+    <div class="vg">
+        <article class="v">
+          <div class="im"><img src="/_blob/59a31fe072845d37e5051d31b2fe1d05" alt="Rígido de bolas, abierto" loading="lazy"></div>
+          <h2>Rígido de bolas, abierto</h2>
+          <p class="suf">6207 · 6207 C3</p>
+          <p>Sin sufijo de sello. Bolas y jaula a la vista.</p>
+        </article>
+        <article class="v">
+          <div class="im"><img src="/_blob/a690e95cf859c82857a0b7eb6e85bcfa" alt="Rígido de bolas, sellos de hule" loading="lazy"></div>
+          <h2>Rígido de bolas, sellos de hule</h2>
+          <p class="suf">2RS · 2RSR · 2HRS (FAG) · 2RSH · 2RS1 (SKF) · DDU (NSK) · LLU (NTN) · 2RS2 (NKE)</p>
+          <p>Sello negro de hule en ambos lados; llega engrasado.</p>
+        </article>
+        <article class="v">
+          <div class="im"><img src="/_blob/f4fdc3dba4df4701ae6f39a9a0a1a720" alt="Rígido de bolas, tapas metálicas" loading="lazy"></div>
+          <h2>Rígido de bolas, tapas metálicas</h2>
+          <p class="suf">2Z · 2ZR (FAG) · 2Z (SKF) · ZZ (NSK, NTN, Translink)</p>
+          <p>Tapa de lámina de acero en ambos lados; no es hermética.</p>
+        </article>
+        <article class="v">
+          <div class="im"><img src="/_blob/a75b8d36435a151c90a98dfd1cb29e44" alt="De bolas a rótula (autoalineable)" loading="lazy"></div>
+          <h2>De bolas a rótula (autoalineable)</h2>
+          <p class="suf">12.. · 13.. · 22.. · 23.. · K = agujero cónico</p>
+          <p>Dos hileras de bolas; el aro exterior esférico tolera desalineación.</p>
+        </article>
+        <article class="v">
+          <div class="im"><img src="/_blob/180f03fdc8142a75e76568b6cdad6b65" alt="De contacto angular, doble hilera" loading="lazy"></div>
+          <h2>De contacto angular, doble hilera</h2>
+          <p class="suf">32.. · 33.. · 52.. · 53.. · TVH / TN9 = jaula de poliamida</p>
+          <p>Dos hileras de bolas inclinadas: carga radial y axial en ambos sentidos.</p>
+        </article>
+        <article class="v">
+          <div class="im"><img src="/_blob/f55f2df1b24df95cbde28903349bd712" alt="Rodillos cilíndricos, jaula de latón" loading="lazy"></div>
+          <h2>Rodillos cilíndricos, jaula de latón (vista en corte)</h2>
+          <p class="suf">M · M1 · MA · MP · MPA (FAG) · ECM · ECMA (SKF) · EM (NSK)</p>
+          <p>Jaula maciza dorada; aguanta vibración, choque y temperatura.</p>
+        </article>
+        <article class="v">
+          <div class="im"><img src="/_blob/29f4862d64de11ff7245db0c77e35e4c" alt="Rodillos cilíndricos, jaula de poliamida" loading="lazy"></div>
+          <h2>Rodillos cilíndricos, jaula de poliamida</h2>
+          <p class="suf">TVP · TVP2 (FAG) · ECP · P (SKF) · ET (NSK) · G1 (NTN)</p>
+          <p>Jaula negra de plástico técnico con fibra de vidrio; hasta ~120 °C.</p>
+        </article>
+        <article class="v">
+          <div class="im"><img src="/_blob/57b72f581b2758fcf2d72c04ece0a776" alt="Rodillos cilíndricos, jaula de acero" loading="lazy"></div>
+          <h2>Rodillos cilíndricos, jaula de acero</h2>
+          <p class="suf">J · JP · JPA (FAG) · ECJ (SKF) · EW (NSK)</p>
+          <p>Jaula de lámina de acero.</p>
+        </article>
+        <article class="v">
+          <div class="im"><img src="/_blob/ab1811e4d3413224f9115b608a93fcfa" alt="Rodillos esféricos, jaula de latón" loading="lazy"></div>
+          <h2>Rodillos esféricos, jaula de latón</h2>
+          <p class="suf">M · MB · MA (FAG) · CA · CAK · ECA (SKF) · CAM (NSK)</p>
+          <p>Jaula maciza de latón; W33 = ranura y 3 orificios para engrasar por el aro exterior.</p>
+        </article>
+        <article class="v">
+          <div class="im"><img src="/_blob/35234fe3371dae81b07edb4c84610c8f" alt="Rodillos esféricos, jaula de acero" loading="lazy"></div>
+          <h2>Rodillos esféricos, jaula de acero</h2>
+          <p class="suf">E1 (FAG) · E · CC (SKF) · EA · EAE4 (NSK) · EMW33 (NTN)</p>
+          <p>Dos jaulas de lámina de acero. En cribas: T41A (FAG), VA405 (SKF).</p>
+        </article>
+        <article class="v">
+          <div class="im"><img src="/_blob/79e81387619d719fa241d926c4bd6983" alt="Rodillos cónicos, sencillo" loading="lazy"></div>
+          <h2>Rodillos cónicos, sencillo</h2>
+          <p class="suf">302.. · 322.. · 320.. · LM / HM (Timken, cono y copa por separado)</p>
+          <p>Cono con rodillos y copa (aro exterior) separada.</p>
+        </article>
+        <article class="v">
+          <div class="im"><img src="/_blob/f82a961647a6715c2e0e217ecfdcd5ae" alt="Cónicos en pareja" loading="lazy"></div>
+          <h2>Cónicos en pareja</h2>
+          <p class="suf">DF = cara a cara (X) · DB = espalda con espalda (O)</p>
+          <p>Dos rodamientos apareados con espaciador.</p>
+        </article>
+        <article class="v">
+          <div class="im"><img src="/_blob/a7df47d3b348dd0911ec72e2612ec260" alt="Cónico doble Timken" loading="lazy"></div>
+          <h2>Cónico doble Timken</h2>
+          <p class="suf">TDO = copa doble · TDI = cono doble · TNA</p>
+          <p>Una copa doble con dos conos; muy rígido ante cargas de vuelco.</p>
+        </article>
+        <article class="v">
+          <div class="im"><img src="/_blob/862b97569cd36f7bf49b3ef8f8354b14" alt="De agujas" loading="lazy"></div>
+          <h2>De agujas</h2>
+          <p class="suf">HK · BK (casquillo) · NK · NA · RNA (con aro macizo)</p>
+          <p>Agujas finas: mucha carga en poco espacio.</p>
+        </article>
+    </div>
+  </div>
+
+  <footer class="foot">
+    <div class="wrap">
+      <div>DICOM · Distribuciones Industriales COM</div>
+      <nav aria-label="Pie de página">
+        <a href="Main.dc.html">Catálogo</a>
+        <a href="Main.dc.html">Cotizador</a>
+        <a href="#cuenta">Mi cuenta</a>
+        <a href="#privacidad">Aviso de privacidad</a>
+        <a href="#terminos">Términos y condiciones</a>
+      </nav>
+    </div>
+  </footer>
+
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":3400}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

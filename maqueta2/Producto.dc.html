@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>DICOM · FAG 6205-2RSR</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+body { margin: 0; }
+a { color: #0D6B45; }
+a:hover { color: #094A30; }
+.pg { font-family: 'Archivo', system-ui, sans-serif; color: #0E1F1A; background: #FFFFFF; font-size: 17px; line-height: 1.5; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+.pg *, .pg *::before, .pg *::after { box-sizing: border-box; }
+.wrap { max-width: 1240px; margin: 0 auto; padding: 0 32px; }
+.mono { font-family: 'IBM Plex Mono', ui-monospace, monospace; }
+.kicker { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12.5px; letter-spacing: .12em; text-transform: uppercase; color: #0D6B45; }
+
+.top { background: #0A1D17; color: #DCE5E0; font-size: 14px; text-align: center; padding: 9px 16px; }
+.top b { color: #7FE3B8; font-weight: 600; }
+.hdr { position: sticky; top: 0; z-index: 30; background: rgba(255,255,255,.82); -webkit-backdrop-filter: saturate(1.6) blur(14px); backdrop-filter: saturate(1.6) blur(14px); border-bottom: 1px solid rgba(14,31,26,.1); }
+.hdr .wrap { display: flex; align-items: center; gap: 12px 28px; min-height: 72px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 11px; text-decoration: none; color: #0E1F1A; }
+.brand svg { width: 52px; height: 46px; color: #2F3835; }
+.orb { fill: none; stroke: currentColor; stroke-width: 3.2; transition: transform 1s cubic-bezier(.2,.7,.2,1); }
+.o2 { transform: rotate(60deg); }
+.o3 { transform: rotate(120deg); }
+.brand:hover .o2 { transform: rotate(120deg); }
+.brand:hover .o3 { transform: rotate(60deg); }
+.leaf { fill: #11914F; }
+.stem { fill: none; stroke: #11914F; stroke-width: 1.6; stroke-linecap: round; }
+.brand-name { display: block; font-stretch: 85%; font-weight: 700; font-size: 26px; letter-spacing: .03em; line-height: 1; }
+.brand-sub { display: block; font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: .1em; color: #55605B; margin-top: 4px; text-transform: uppercase; }
+.nav { display: flex; gap: 2px; flex-wrap: wrap; margin-left: auto; }
+.nav a { color: #0E1F1A; text-decoration: none; font-weight: 500; font-size: 15.5px; padding: 0 14px; min-height: 44px; display: inline-flex; align-items: center; border-radius: 22px; transition: background .25s ease; }
+.nav a:hover { background: #EEF2EF; color: #0E1F1A; }
+.cart { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px; border-radius: 22px; background: #0E1F1A; color: #FFFFFF; text-decoration: none; font-weight: 500; font-size: 15px; transition: background .25s ease, transform .25s ease; }
+.cart:hover { background: #0D6B45; color: #FFFFFF; transform: translateY(-1px); }
+.cart svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.count { display: inline-flex; align-items: center; justify-content: center; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px; background: #7FE3B8; color: #0A1D17; font-size: 13px; font-weight: 600; animation: pop .45s cubic-bezier(.2,1.6,.4,1) both; }
+@keyframes pop { from { transform: scale(.3); opacity: 0; } to { transform: none; opacity: 1; } }
+
+.crumbs { display: flex; flex-wrap: wrap; gap: 0 8px; padding: 22px 0 0; font-size: 14.5px; color: #55605B; }
+.crumbs a { color: #55605B; text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; }
+.crumbs a:hover { color: #0D6B45; }
+.crumbs span { min-height: 44px; display: inline-flex; align-items: center; }
+
+.main { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr); gap: 56px; align-items: start; padding: 10px 0 96px; }
+@keyframes fade { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+/* dibujo técnico */
+.plate { position: sticky; top: 96px; background: #F3F6F3; border-radius: 28px; padding: 36px 28px 24px; animation: fade .9s ease both; }
+.plate svg { width: 100%; height: auto; display: block; overflow: visible; }
+.ln { fill: none; stroke: #0E1F1A; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 900; stroke-dashoffset: 900; animation: trace 1.6s cubic-bezier(.3,.6,.2,1) forwards; }
+.ln.b { animation-delay: .25s; }
+.ln.c { animation-delay: .5s; }
+.seal { fill: none; stroke: #CFE6DA; animation: fade 1s .9s ease both; }
+.fillr { fill: #DDE6E1; stroke: none; animation: fade 1s .9s ease both; }
+.ball { fill: #FFFFFF; stroke: #0E1F1A; stroke-width: 1.4; animation: fade 1s 1s ease both; }
+.axis { stroke: #7A8782; stroke-width: 1; stroke-dasharray: 10 4 2 4; fill: none; animation: fade 1s 1.1s ease both; }
+.dimline { fill: none; stroke: #0D6B45; stroke-width: 1.2; stroke-dasharray: 400; stroke-dashoffset: 400; animation: trace 1.2s 1.2s cubic-bezier(.3,.6,.2,1) forwards; }
+.dimtxt { font-family: 'IBM Plex Mono', monospace; font-size: 13px; fill: #0A5C3B; animation: fade .8s 1.8s ease both; }
+@keyframes trace { to { stroke-dashoffset: 0; } }
+.views { display: inline-flex; padding: 4px; border-radius: 24px; background: #E3E9E5; margin-bottom: 18px; }
+.views button { border: 0; background: transparent; font: inherit; font-size: 14.5px; font-weight: 500; color: #3D4A45; min-height: 44px; padding: 0 18px; border-radius: 20px; cursor: pointer; transition: background .3s ease, color .3s ease, box-shadow .3s ease; }
+.views button[aria-pressed="true"] { background: #FFFFFF; color: #0E1F1A; box-shadow: 0 1px 2px rgba(14,31,26,.12), 0 4px 14px rgba(14,31,26,.06); }
+.photo { position: relative; aspect-ratio: 560 / 400; display: grid; place-items: center; animation: fade .7s ease both; }
+.photo::before { content: ''; position: absolute; inset: 6% 18%; border-radius: 50%; background: radial-gradient(closest-side, rgba(127,227,184,.5), rgba(127,227,184,0)); filter: blur(8px); }
+.boxslot { position: absolute; left: 14%; top: 6%; width: 52%; height: 70%; border-radius: 10px; border: 2px dashed #9FB3A9; background: repeating-linear-gradient(135deg, rgba(255,255,255,.7) 0 12px, rgba(227,233,229,.7) 12px 24px); display: flex; flex-direction: column; justify-content: flex-start; gap: 4px; padding: 16px 18px; color: #3D4A45; transform: perspective(900px) rotateY(16deg); }
+.boxslot span { font-weight: 700; letter-spacing: .04em; color: #E3000F; }
+.boxslot small { font-size: 12.5px; line-height: 1.35; max-width: 18em; }
+.photo.boxed img { height: 74%; align-self: end; justify-self: end; margin-right: 6%; }
+.photo img { position: relative; height: 100%; width: auto; max-width: 100%; object-fit: contain; mix-blend-mode: multiply; animation: float 7s ease-in-out infinite; transition: transform 1s cubic-bezier(.16,.84,.24,1); cursor: zoom-in; }
+.photo:hover img { transform: scale(1.12); }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+.mk { display: inline-block; font-family: 'Archivo', sans-serif; font-size: 12.5px; font-weight: 700; letter-spacing: .08em; padding: 3px 10px; border-radius: 10px; background: var(--bg); color: var(--fg); box-shadow: inset 0 0 0 var(--lw, 1px) var(--ln, transparent); text-shadow: var(--ts, none); vertical-align: 1px; }
+.pay { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin-top: 12px; font-weight: 600; text-decoration: none; color: #0D6B45; animation: fade .5s ease both; }
+.pay svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: transform .3s cubic-bezier(.16,.84,.24,1); }
+.pay:hover svg { transform: translateX(5px); }
+.plate-note { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; margin-top: 18px; padding-top: 16px; border-top: 1px solid #D6DFDA; font-size: 13.5px; color: #55605B; }
+
+/* compra */
+.buy { animation: fade .9s .12s ease both; }
+.buy h1 { font-stretch: 88%; font-weight: 600; font-size: clamp(42px, 5vw, 68px); line-height: 1; letter-spacing: -.025em; margin: 12px 0 12px; }
+.sub { font-size: 19px; color: #3D4A45; margin: 0 0 28px; max-width: 26em; }
+.dims3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid #DCE3DF; border-bottom: 1px solid #DCE3DF; }
+.dims3 div { padding: 16px 0 14px; }
+.dims3 div + div { padding-left: 20px; border-left: 1px solid #DCE3DF; }
+.dims3 dt { font-size: 13.5px; color: #55605B; }
+.dims3 dd { margin: 2px 0 0; font-family: 'IBM Plex Mono', monospace; font-size: 26px; font-weight: 500; letter-spacing: -.01em; }
+.dims3 dd small { font-size: 14px; color: #55605B; font-weight: 400; }
+.price { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin: 30px 0 4px; }
+.price b { font-stretch: 90%; font-size: 54px; font-weight: 600; letter-spacing: -.03em; line-height: 1; }
+.price span { font-size: 18px; color: #3D4A45; }
+.withtax { font-size: 15px; color: #55605B; margin: 0 0 26px; }
+
+.ship { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px; padding: 18px 20px; border-radius: 18px; background: #E4F3EB; color: #073F29; transition: background .4s ease, color .4s ease; }
+.ship.later { background: #FFF1D6; color: #5A3A00; }
+.ship.out { background: #EEF2EF; color: #3D4A45; }
+.dot { width: 12px; height: 12px; border-radius: 6px; margin-top: 7px; background: #0D6B45; animation: pulse 2.2s ease-out infinite; }
+.ship.later .dot { background: #B36B00; animation: none; }
+.ship.out .dot { background: #7A8782; animation: none; }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(13,107,69,.5); } 70% { box-shadow: 0 0 0 10px rgba(13,107,69,0); } 100% { box-shadow: 0 0 0 0 rgba(13,107,69,0); } }
+.ship b { display: block; font-size: 18px; font-weight: 600; line-height: 1.25; }
+.ship span { font-size: 15.5px; }
+
+.facts { list-style: none; margin: 18px 0 0; padding: 0; display: grid; gap: 10px; font-size: 16px; color: #3D4A45; }
+.facts li { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 10px; align-items: start; }
+.facts svg { width: 20px; height: 20px; margin-top: 2px; fill: none; stroke: #0D6B45; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.facts b { color: #0E1F1A; font-weight: 600; }
+
+.order { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.qty { display: inline-flex; align-items: center; border: 1.5px solid #C5CFC9; border-radius: 28px; padding: 3px; }
+.qty button { width: 48px; height: 48px; border: 0; border-radius: 24px; background: transparent; font: inherit; font-size: 24px; line-height: 1; color: #0E1F1A; cursor: pointer; transition: background .2s ease; }
+.qty button:hover { background: #EEF2EF; }
+.qty input { width: 64px; border: 0; outline: 0; background: transparent; text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 20px; font-weight: 500; color: #0E1F1A; height: 48px; }
+.add { flex: 1 1 240px; display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 56px; padding: 0 26px; border: 0; border-radius: 28px; background: #0D6B45; color: #FFFFFF; font: inherit; font-weight: 600; font-size: 17.5px; cursor: pointer; transition: background .25s ease, transform .3s cubic-bezier(.16,.84,.24,1), box-shadow .3s ease; }
+.add:hover { background: #0A5C3B; transform: translateY(-2px); box-shadow: 0 16px 30px -14px rgba(13,107,69,.6); }
+.add:active { transform: scale(.98); }
+.add:disabled { background: #C5CFC9; color: #55605B; cursor: not-allowed; transform: none; box-shadow: none; }
+.add.done { background: #0E1F1A; }
+.add svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.fine { font-size: 14px; color: #55605B; margin: 14px 0 0; }
+
+/* datos técnicos */
+.sec { padding: 96px 0; }
+.sec.soft { background: #F3F6F3; }
+.sec h2 { font-stretch: 88%; font-weight: 600; font-size: clamp(32px, 3.8vw, 50px); line-height: 1.04; letter-spacing: -.022em; margin: 12px 0 40px; }
+.specs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 56px; margin: 0; }
+.specs div { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; gap: 14px; align-items: baseline; padding: 15px 0; border-top: 1px solid #DCE3DF; }
+.specs dt { font-family: 'IBM Plex Mono', monospace; font-size: 15px; color: #0D6B45; }
+.specs dd { margin: 0; font-size: 16px; color: #3D4A45; }
+.specs dd.v { font-family: 'IBM Plex Mono', monospace; font-size: 17px; font-weight: 500; color: #0E1F1A; white-space: nowrap; }
+.src { margin: 28px 0 0; font-size: 14.5px; color: #55605B; max-width: 46em; }
+
+.code { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 22px; }
+.code button { font-family: 'IBM Plex Mono', monospace; font-size: clamp(40px, 6vw, 76px); font-weight: 500; line-height: 1; padding: 10px 16px; min-height: 44px; border: 0; border-radius: 18px; background: #F3F6F3; color: #0E1F1A; cursor: pointer; transition: background .3s ease, color .3s ease, transform .4s cubic-bezier(.16,.84,.24,1), box-shadow .4s ease; }
+.code button:hover { transform: translateY(-3px); }
+.code button.sel { background: #0D6B45; color: #FFFFFF; box-shadow: 0 0 0 4px rgba(127,227,184,.45), 0 18px 34px -18px rgba(13,107,69,.7); }
+.code .dash { font-family: 'IBM Plex Mono', monospace; font-size: clamp(40px, 6vw, 76px); color: #9AA6A1; }
+.decode { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 20px; align-items: start; padding: 24px 26px; border-radius: 22px; background: #0A1D17; color: #FFFFFF; max-width: 820px; }
+.decode .dk { font-family: 'IBM Plex Mono', monospace; font-size: 34px; color: #7FE3B8; line-height: 1.1; }
+.decode b { font-size: 21px; font-weight: 600; }
+.decode p { margin: 6px 0 0; color: #C3CFC9; font-size: 16.5px; }
+.legend { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; margin-top: 34px; }
+.legend b { display: block; font-size: 17px; margin-bottom: 4px; }
+.legend span { color: #3D4A45; font-size: 15.5px; }
+@media (max-width: 900px) { .legend { grid-template-columns: minmax(0, 1fr); } .decode { grid-template-columns: minmax(0, 1fr); gap: 6px; } }
+.datos { list-style: none; display: flex; flex-wrap: wrap; gap: 12px; margin: 0; padding: 0; }
+.datos li { display: inline-flex; align-items: center; gap: 10px; padding: 14px 20px; border-radius: 999px; background: #F3F6F3; font-size: 17px; color: #0E1F1A; }
+.datos li::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #0D6B45; flex: none; }
+.alts { display: grid; gap: 0; }
+.alt { display: grid; grid-template-columns: 130px minmax(0, 1fr) auto 24px; gap: 18px; align-items: center; padding: 20px 14px; border-top: 1px solid #D6DFDA; text-decoration: none; color: #0E1F1A; transition: background .25s ease, padding-left .35s cubic-bezier(.16,.84,.24,1); }
+.alt:last-child { border-bottom: 1px solid #D6DFDA; }
+.alt:hover { background: #FFFFFF; color: #0E1F1A; padding-left: 22px; }
+.alt .m { line-height: 1; }
+.alt .p { font-family: 'IBM Plex Mono', monospace; font-size: 18px; font-weight: 500; }
+.alt .w { display: block; font-size: 14.5px; color: #55605B; }
+.alt .c { text-align: right; white-space: nowrap; }
+.alt .c b { font-size: 20px; font-weight: 600; }
+.alt .c span { display: block; font-size: 13px; color: #55605B; }
+.alt svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; transition: transform .3s cubic-bezier(.16,.84,.24,1); }
+.alt:hover svg { transform: translateX(5px); }
+
+@supports (animation-timeline: view()) {
+  .rv { animation: rv linear both; animation-timeline: view(); animation-range: entry 0% entry 42%; }
+  @keyframes rv { from { opacity: 0; transform: translateY(42px); } to { opacity: 1; transform: none; } }
+}
+
+.foot { background: #FFFFFF; border-top: 1px solid #E6EBE8; padding: 44px 0 56px; font-size: 15px; color: #55605B; }
+.foot .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 18px 40px; }
+.foot nav { display: flex; flex-wrap: wrap; gap: 4px 22px; }
+.foot a { color: #3D4A45; text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; }
+.foot a:hover { color: #0D6B45; }
+
+@media (max-width: 900px) {
+  .main { grid-template-columns: minmax(0, 1fr); gap: 32px; padding-bottom: 64px; }
+  .plate { position: static; }
+  .specs { grid-template-columns: minmax(0, 1fr); }
+  .sec { padding: 64px 0; }
+  .nav { order: 3; width: 100%; margin-left: 0; }
+  .cart { margin-left: auto; }
+}
+@media (max-width: 560px) {
+  .wrap { padding: 0 20px; }
+  .alt { grid-template-columns: minmax(0, 1fr) auto; }
+  .alt .m { grid-column: 1 / -1; }
+  .alt svg { display: none; }
+  .brand-sub { display: none; }
+  .price b { font-size: 44px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pg *, .pg *::before, .pg *::after { animation: none !important; transition: none !important; }
+  .ln, .dimline { stroke-dashoffset: 0; }
+  .photo img { animation: none; }
+}
+</style>
+</helmet>
+<div class="pg">
+
+  <div class="top"><b>Envío gratis</b> en productos seleccionados</div>
+
+  <header class="hdr">
+    <div class="wrap">
+      <a class="brand" href="Main.dc.html" aria-label="DICOM, inicio">
+        <svg viewBox="-50 -44 100 88" aria-hidden="true">
+          <ellipse class="orb" rx="46" ry="15"></ellipse>
+          <ellipse class="orb o2" rx="46" ry="15"></ellipse>
+          <ellipse class="orb o3" rx="46" ry="15"></ellipse>
+          <path class="stem" d="M0 0 Q -1.5 5 -4 9"></path>
+          <path class="leaf" transform="rotate(45)" d="M0 0 C -4.5 -2 -6 -6.5 -3 -8 C -1.5 -8.8 0 -7.6 0 -6.4 C 0 -7.6 1.5 -8.8 3 -8 C 6 -6.5 4.5 -2 0 0 Z"></path>
+          <path class="leaf" transform="rotate(135)" d="M0 0 C -4.5 -2 -6 -6.5 -3 -8 C -1.5 -8.8 0 -7.6 0 -6.4 C 0 -7.6 1.5 -8.8 3 -8 C 6 -6.5 4.5 -2 0 0 Z"></path>
+          <path class="leaf" transform="rotate(225)" d="M0 0 C -4.5 -2 -6 -6.5 -3 -8 C -1.5 -8.8 0 -7.6 0 -6.4 C 0 -7.6 1.5 -8.8 3 -8 C 6 -6.5 4.5 -2 0 0 Z"></path>
+          <path class="leaf" transform="rotate(315)" d="M0 0 C -4.5 -2 -6 -6.5 -3 -8 C -1.5 -8.8 0 -7.6 0 -6.4 C 0 -7.6 1.5 -8.8 3 -8 C 6 -6.5 4.5 -2 0 0 Z"></path>
+        </svg>
+        <span>
+          <span class="brand-name">DICOM</span>
+          <span class="brand-sub">Distribuciones Industriales COM</span>
+        </span>
+      </a>
+      <nav class="nav" aria-label="Principal">
+        <a href="Main.dc.html">Catálogo</a>
+        <a href="Main.dc.html">Marcas</a>
+        <a href="Main.dc.html">Cotizador</a>
+        <a href="#cuenta">Mi cuenta</a>
+      </nav>
+      <a class="cart" href="Pago.dc.html">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2.2l2.3 11h10.2l2-8H6.4"></path><circle cx="9.5" cy="19" r="1.3"></circle><circle cx="16.5" cy="19" r="1.3"></circle></svg>
+        Carrito
+        <sc-if value="{{hayCarrito}}" hint-placeholder-val="{{ false }}"><span class="count" aria-label="piezas en el carrito">{{enCarrito}}</span></sc-if>
+      </a>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Ruta">
+      <a href="Main.dc.html">Inicio</a><span aria-hidden="true">/</span>
+      <a href="Main.dc.html">Rodamientos de bolas</a><span aria-hidden="true">/</span>
+      <span>6205-2RSR</span>
+    </nav>
+
+    <div class="main">
+
+      <figure class="plate" style="margin: 0">
+        <div class="views" role="group" aria-label="Qué ver">
+          <button type="button" aria-pressed="{{verCaja}}" onClick="{{aCaja}}">Con su caja</button>
+          <button type="button" aria-pressed="{{verFoto}}" onClick="{{aFoto}}">Foto</button>
+          <button type="button" aria-pressed="{{verPlano}}" onClick="{{aPlano}}">Medidas</button>
+        </div>
+        <sc-if value="{{verCaja}}" hint-placeholder-val="{{ false }}">
+          <div class="photo boxed">
+            <div class="boxslot" aria-hidden="true"><span>Caja oficial FAG</span><small>Se coloca la foto del paquete de imágenes que envíe la marca</small></div>
+            <img src="/_blob/a690e95cf859c82857a0b7eb6e85bcfa" alt="Rodamiento rígido de bolas con sellos de hule, frente a su caja">
+          </div>
+        </sc-if>
+        <sc-if value="{{verFoto}}" hint-placeholder-val="{{ true }}">
+          <div class="photo"><img src="/_blob/2fb31586d665d2ef1352cba89f21f3bc" alt="Rodamiento rígido de bolas sellado, vista de tres cuartos"></div>
+        </sc-if>
+        <sc-if value="{{verPlano}}" hint-placeholder-val="{{ false }}">
+        <svg viewBox="0 0 560 400" role="img" aria-label="Dibujo del rodamiento 6205: diámetro interior 25 milímetros, diámetro exterior 52 milímetros, ancho 15 milímetros">
+          <circle class="seal" cx="170" cy="200" r="96.25" stroke-width="27.8"></circle>
+          <circle class="ln" cx="170" cy="200" r="130"></circle>
+          <circle class="ln b" cx="170" cy="200" r="110.15"></circle>
+          <circle class="ln b" cx="170" cy="200" r="82.35"></circle>
+          <circle class="ln c" cx="170" cy="200" r="62.5"></circle>
+          <path class="axis" d="M20 200H320M170 50V350"></path>
+
+          <rect class="fillr" x="400" y="70" width="75" height="19.85"></rect>
+          <rect class="fillr" x="400" y="117.65" width="75" height="19.85"></rect>
+          <rect class="fillr" x="400" y="262.5" width="75" height="19.85"></rect>
+          <rect class="fillr" x="400" y="310.15" width="75" height="19.85"></rect>
+          <path class="ln" d="M400 70H475V330H400Z"></path>
+          <path class="ln b" d="M400 89.85H475M400 117.65H475M400 137.5H475M400 262.5H475M400 282.35H475M400 310.15H475"></path>
+          <circle class="ball" cx="437.5" cy="103.75" r="19.8"></circle>
+          <circle class="ball" cx="437.5" cy="296.25" r="19.8"></circle>
+          <path class="axis" d="M385 200H490"></path>
+
+          <path class="dimline" d="M400 44H475M400 37V51M475 37V51"></path>
+          <text class="dimtxt" x="437.5" y="30" text-anchor="middle">B 15</text>
+          <path class="dimline" d="M508 70V330M501 70H515M501 330H515"></path>
+          <text class="dimtxt" x="522" y="204">D 52</text>
+          <path class="dimline" d="M362 137.5V262.5M355 137.5H369M355 262.5H369"></path>
+          <text class="dimtxt" x="352" y="186" text-anchor="end">d 25</text>
+          <text class="dimtxt" x="170" y="384" text-anchor="middle">Vista frontal</text>
+          <text class="dimtxt" x="437.5" y="384" text-anchor="middle">Corte</text>
+        </svg>
+        </sc-if>
+        <figcaption class="plate-note">
+          <span>{{notaVista}}</span>
+          <span>La pieza real lleva la marca del fabricante</span>
+        </figcaption>
+      </figure>
+
+      <div class="buy">
+        <div class="kicker"><span class="mk" style="--bg:#E3000F;--fg:#FFFFFF">FAG</span>&nbsp; Rodamiento rígido de bolas</div>
+        <h1>6205-2RSR</h1>
+        <p class="sub">Una hilera de bolas, con sello de hule en ambos lados. Llega engrasado y listo para montar.</p>
+
+        <dl class="dims3" style="margin: 0">
+          <div><dt>Diámetro interior</dt><dd>25 <small>mm</small></dd></div>
+          <div><dt>Diámetro exterior</dt><dd>52 <small>mm</small></dd></div>
+          <div><dt>Ancho</dt><dd>15 <small>mm</small></dd></div>
+        </dl>
+
+        <div class="price"><b>$95.10</b><span>más IVA, por pieza</span></div>
+        <p class="withtax">$110.32 con IVA incluido</p>
+
+        <div class="{{claseEnvio}}" aria-live="polite">
+          <i class="dot" aria-hidden="true"></i>
+          <div><b>{{tituloEnvio}}</b><span>{{detalleEnvio}}</span></div>
+        </div>
+
+        <ul class="facts">
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"></path><circle cx="12" cy="10" r="2.3"></circle></svg><span><b>Ciudad de México:</b> 41 piezas</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V9l8-5 8 5v11M9 20v-6h6v6"></path></svg><span><b>Otras sucursales:</b> 151 piezas, con mayor tiempo de entrega</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7M7 19a1.6 1.6 0 1 0 0-3.2A1.6 1.6 0 0 0 7 19zM17.5 19a1.6 1.6 0 1 0 0-3.2 1.6 1.6 0 0 0 0 3.2z"></path></svg><span><b>Envío gratis</b> a todo México en este producto</span></li>
+        </ul>
+
+        <div class="order">
+          <div class="qty">
+            <button type="button" aria-label="Quitar una pieza" onClick="{{menos}}">−</button>
+            <input type="text" inputmode="numeric" aria-label="Cantidad de piezas" value="{{cantidad}}" onChange="{{alCambiar}}">
+            <button type="button" aria-label="Agregar una pieza" onClick="{{mas}}">+</button>
+          </div>
+          <button type="button" class="{{claseBoton}}" disabled="{{sinExistencia}}" onClick="{{agregar}}">
+            <sc-if value="{{recienAgregado}}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></sc-if>
+            {{textoBoton}}
+          </button>
+        </div>
+        <p class="fine">{{subtotal}}</p>
+        <sc-if value="{{hayCarrito}}" hint-placeholder-val="{{ false }}">
+          <a class="pay" href="Pago.dc.html">Ir a pagar <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+
+  <section class="sec">
+    <div class="wrap">
+      <div class="rv">
+        <div class="kicker">Datos de la pieza</div>
+        <h2>FAG 6205-2RSR</h2>
+      </div>
+      <ul class="datos rv" aria-label="Datos de la pieza">
+        <li>Rodamiento rígido de bolas</li>
+        <li>Sellos de hule en ambos lados</li>
+        <li>Agujero de 25 mm</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec soft">
+    <div class="wrap">
+      <div class="rv">
+        <div class="kicker">Datos técnicos</div>
+        <h2>Todo lo que necesitas para confirmar que es tu pieza.</h2>
+      </div>
+      <dl class="specs rv">
+        <div><dt>d</dt><dd>Diámetro del agujero</dd><dd class="v">25 mm</dd></div>
+        <div><dt>D</dt><dd>Diámetro exterior</dd><dd class="v">52 mm</dd></div>
+        <div><dt>B</dt><dd>Ancho</dd><dd class="v">15 mm</dd></div>
+        <div><dt>m</dt><dd>Peso aproximado</dd><dd class="v">0.125 kg</dd></div>
+        <div><dt>Cr</dt><dd>Capacidad de carga dinámica, radial</dd><dd class="v">15,900 N</dd></div>
+        <div><dt>C0r</dt><dd>Capacidad de carga estática, radial</dd><dd class="v">7,800 N</dd></div>
+        <div><dt>nG</dt><dd>Velocidad límite de rotación</dd><dd class="v">12,200 rpm</dd></div>
+        <div><dt>T</dt><dd>Temperatura de trabajo</dd><dd class="v">−20 a 100 °C</dd></div>
+        <div><dt>d1</dt><dd>Diámetro del resalte del anillo interior</dd><dd class="v">32.94 mm</dd></div>
+        <div><dt>D1</dt><dd>Diámetro del resalte del anillo exterior</dd><dd class="v">44.06 mm</dd></div>
+        <div><dt>2RSR</dt><dd>Obturación</dd><dd class="v">Sello de contacto, ambos lados</dd></div>
+        <div><dt>JN</dt><dd>Jaula</dd><dd class="v">Chapa de acero</dd></div>
+      </dl>
+      <p class="src">Datos del catálogo del fabricante para la designación actual FAG 6205-C-2HRS, que sustituye a la 6205-2RSR. Las medidas principales son las mismas en cualquier marca.</p>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <div class="rv">
+        <div class="kicker">Misma medida · 25 × 52 × 15 mm</div>
+        <h2>El mismo 6205 sellado, en otras marcas.</h2>
+      </div>
+      <div class="alts rv">
+        <a class="alt" href="#translink"><span class="m"><span class="mk" style="--bg:#FFFFFF;--fg:#0E1F1A;--ln:rgba(14,31,26,.22)">TRANSLINK</span></span><span><span class="p">6205-2RS</span><span class="w">Se envía hoy si compras antes de las 2 p.m.</span></span><span class="c"><b>$49.43</b><span>más IVA</span></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+        <a class="alt" href="#fersa"><span class="m"><span class="mk" style="--bg:#3AA8E0;--fg:#FFFFFF">FERSA</span></span><span><span class="p">6205-2RS C3</span><span class="w">Se envía hoy si compras antes de las 2 p.m.</span></span><span class="c"><b>$56.18</b><span>más IVA</span></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+        <a class="alt" href="#nke"><span class="m"><span class="mk" style="--bg:#0B4EA2;--fg:#FFFFFF;--ln:#3DB54A;--lw:3px">NKE</span></span><span><span class="p">6205-2RS2</span><span class="w">Se envía hoy si compras antes de las 2 p.m.</span></span><span class="c"><b>$66.79</b><span>más IVA</span></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+        <a class="alt" href="#timken"><span class="m"><span class="mk" style="--bg:#F47920;--fg:#FFFFFF">TIMKEN</span></span><span><span class="p">6205-2RS</span><span class="w">Se envía hoy si compras antes de las 2 p.m.</span></span><span class="c"><b>$112.81</b><span>más IVA</span></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+        <a class="alt" href="#skf"><span class="m"><span class="mk" style="--bg:#0F58A8;--fg:#FFFFFF">SKF</span></span><span><span class="p">6205-2RSH</span><span class="w">Se envía hoy si compras antes de las 2 p.m.</span></span><span class="c"><b>$240.42</b><span>más IVA</span></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <div class="wrap">
+      <div>DICOM · Distribuciones Industriales COM</div>
+      <nav aria-label="Pie de página">
+        <a href="Main.dc.html">Catálogo</a>
+        <a href="Main.dc.html">Cotizador</a>
+        <a href="#cuenta">Mi cuenta</a>
+        <a href="#privacidad">Aviso de privacidad</a>
+        <a href="#terminos">Términos y condiciones</a>
+      </nav>
+    </div>
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { cantidad: 1, enCarrito: 0, recien: false, vista: 'foto', parte: '' };
+    this.PRECIO = 95.10;
+    this.CDMX = 41;
+    this.TOTAL = 192;
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.reloj);
+  }
+
+  pesos(n) {
+    return '$' + n.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  fijar(n) {
+    var v = Math.max(1, Math.min(9999, Math.floor(Number(n)) || 1));
+    this.setState({ cantidad: v, recien: false });
+  }
+
+  renderVals() {
+    var s = this.state;
+    var c = s.cantidad;
+    var hoy = c <= this.CDMX;
+    var sinExistencia = c > this.TOTAL;
+    var clase = 'ship', titulo, detalle;
+    if (hoy) {
+      titulo = 'Se envía hoy si compras antes de las 2 p.m.';
+      detalle = 'Sale de Ciudad de México en día hábil. El tiempo restante es el de la paquetería.';
+    } else if (!sinExistencia) {
+      clase = 'ship later';
+      titulo = 'Mayor tiempo de entrega';
+      detalle = 'En Ciudad de México hay ' + this.CDMX + ' piezas; el resto viene de otra sucursal. Con ' + this.CDMX + ' o menos se envía hoy.';
+    } else {
+      clase = 'ship out';
+      titulo = 'Hay ' + this.TOTAL + ' piezas disponibles';
+      detalle = 'Baja la cantidad o pide el total en el cotizador y te confirmamos el tiempo de entrega.';
+    }
+    var sub = this.pesos(c * this.PRECIO);
+    return {
+      cls6: s.parte === '6' ? 'sel' : '', cls2: s.parte === '2' ? 'sel' : '', cls05: s.parte === '05' ? 'sel' : '', clsRS: (s.parte === 'RS' || s.parte === '') ? 'sel' : '',
+      p6: () => this.setState({ parte: '6' }), p2: () => this.setState({ parte: '2' }), p05: () => this.setState({ parte: '05' }), pRS: () => this.setState({ parte: 'RS' }),
+      parteSel: ({ '6': '6', '2': '2', '05': '05' })[s.parte] || '2RSR',
+      tituloSel: ({ '6': 'Tipo: rodamiento rígido de bolas', '2': 'Serie 2: ligera', '05': 'Agujero de 25 mm' })[s.parte] || 'Sellos de hule en ambos lados',
+      textoSel: ({ '6': 'Una hilera de bolas. Es el rodamiento más común: aguanta carga radial y algo de carga axial.', '2': 'Indica qué tan robusto es para el mismo agujero: la serie 62 es más grande que la 60 y más chica que la 63.', '05': 'A partir de 04, el agujero se obtiene multiplicando por 5: 05 × 5 = 25 mm.' })[s.parte] || 'Protegen contra polvo y humedad y el rodamiento llega engrasado de fábrica, listo para montar. Es la variante que muestra la foto.',
+      verCaja: s.vista === 'caja',
+      aCaja: () => this.setState({ vista: 'caja' }),
+      verFoto: s.vista === 'foto',
+      verPlano: s.vista === 'plano',
+      aFoto: () => this.setState({ vista: 'foto' }),
+      aPlano: () => this.setState({ vista: 'plano' }),
+      notaVista: s.vista === 'plano' ? 'Dibujo a escala, medidas en milímetros' : (s.vista === 'caja' ? 'Foto oficial de la marca, pendiente' : 'Foto ilustrativa de la variante sellada (2RS)'),
+      cantidad: String(c),
+      menos: () => this.fijar(c - 1),
+      mas: () => this.fijar(c + 1),
+      alCambiar: (e) => this.fijar(String(e.target.value).replace(/[^0-9]/g, '')),
+      claseEnvio: clase,
+      tituloEnvio: titulo,
+      detalleEnvio: detalle,
+      sinExistencia: sinExistencia,
+      recienAgregado: s.recien,
+      claseBoton: s.recien ? 'add done' : 'add',
+      textoBoton: s.recien ? 'Agregado al carrito' : 'Agregar al carrito',
+      subtotal: c === 1
+        ? 'Precio por pieza en pesos mexicanos, más IVA.'
+        : c + ' piezas: ' + sub + ' más IVA.',
+      hayCarrito: s.enCarrito > 0,
+      enCarrito: String(s.enCarrito),
+      agregar: () => {
+        if (sinExistencia) return;
+        this.setState({ enCarrito: s.enCarrito + c, recien: true });
+        clearTimeout(this.reloj);
+        this.reloj = setTimeout(() => this.setState({ recien: false }), 1800);
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

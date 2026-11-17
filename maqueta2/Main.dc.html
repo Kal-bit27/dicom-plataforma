@@ -1,0 +1,583 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>DICOM · Inicio</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+body { margin: 0; }
+a { color: #0D6B45; }
+a:hover { color: #094A30; }
+.pg { font-family: 'Archivo', system-ui, sans-serif; color: #0E1F1A; background: #FFFFFF; font-size: 17px; line-height: 1.5; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+.pg *, .pg *::before, .pg *::after { box-sizing: border-box; }
+.wrap { max-width: 1240px; margin: 0 auto; padding: 0 32px; }
+.mono { font-family: 'IBM Plex Mono', ui-monospace, monospace; }
+.kicker { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12.5px; letter-spacing: .12em; text-transform: uppercase; color: #0D6B45; }
+
+/* aviso superior */
+.top { background: #0A1D17; color: #DCE5E0; font-size: 14px; text-align: center; padding: 9px 16px; }
+.top b { color: #7FE3B8; font-weight: 600; }
+
+/* encabezado */
+.hdr { position: sticky; top: 0; z-index: 30; background: rgba(255,255,255,.82); -webkit-backdrop-filter: saturate(1.6) blur(14px); backdrop-filter: saturate(1.6) blur(14px); border-bottom: 1px solid rgba(14,31,26,.1); }
+.hdr .wrap { display: flex; align-items: center; gap: 12px 28px; min-height: 72px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 11px; text-decoration: none; color: #0E1F1A; }
+.brand svg { width: 52px; height: 46px; color: #2F3835; }
+.orb { fill: none; stroke: currentColor; stroke-width: 3.2; transition: transform 1s cubic-bezier(.2,.7,.2,1); }
+.o2 { transform: rotate(60deg); }
+.o3 { transform: rotate(120deg); }
+.brand:hover .o2 { transform: rotate(120deg); }
+.brand:hover .o3 { transform: rotate(60deg); }
+.leaf { fill: #11914F; }
+.stem { fill: none; stroke: #11914F; stroke-width: 1.6; stroke-linecap: round; }
+.brand-name { display: block; font-stretch: 85%; font-weight: 700; font-size: 26px; letter-spacing: .03em; line-height: 1; }
+.brand-sub { display: block; font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: .1em; color: #55605B; margin-top: 4px; text-transform: uppercase; }
+.nav { display: flex; gap: 2px; flex-wrap: wrap; margin-left: auto; }
+.nav a { color: #0E1F1A; text-decoration: none; font-weight: 500; font-size: 15.5px; padding: 0 14px; min-height: 44px; display: inline-flex; align-items: center; border-radius: 22px; transition: background .25s ease; }
+.nav a:hover { background: #EEF2EF; color: #0E1F1A; }
+.cart { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px; border-radius: 22px; background: #0E1F1A; color: #FFFFFF; text-decoration: none; font-weight: 500; font-size: 15px; transition: background .25s ease, transform .25s ease; }
+.cart:hover { background: #0D6B45; color: #FFFFFF; transform: translateY(-1px); }
+.cart svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+
+/* portada */
+.hero { background: #F3F6F3; position: relative; overflow: hidden; }
+.hero .wrap { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); gap: 24px; align-items: start; padding-top: 88px; padding-bottom: 96px; }
+.hero h1 { font-stretch: 88%; font-weight: 600; font-size: clamp(44px, 6.1vw, 88px); line-height: .98; letter-spacing: -.025em; margin: 20px 0 22px; }
+.hero h1 span { display: block; overflow: hidden; padding-bottom: .08em; }
+.hero h1 i { display: block; font-style: normal; animation: rise 1s cubic-bezier(.16,.84,.24,1) both; }
+.hero h1 span:nth-child(2) i { animation-delay: .09s; }
+.hero h1 span:nth-child(3) i { animation-delay: .18s; color: #0D6B45; }
+.lede { font-size: 20px; line-height: 1.45; color: #3D4A45; max-width: 34em; margin: 0 0 34px; animation: fade .9s .35s ease both; }
+@keyframes rise { from { transform: translateY(108%); } to { transform: none; } }
+@keyframes fade { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+/* buscador */
+.finder { animation: fade .9s .5s ease both; max-width: 640px; }
+.modes { display: inline-flex; padding: 4px; border-radius: 26px; background: #E3E9E5; margin-bottom: 14px; }
+.modes button { border: 0; background: transparent; font: inherit; font-size: 15px; font-weight: 500; color: #3D4A45; min-height: 44px; padding: 0 20px; border-radius: 22px; cursor: pointer; transition: background .3s ease, color .3s ease, box-shadow .3s ease; }
+.modes button[aria-pressed="true"] { background: #FFFFFF; color: #0E1F1A; box-shadow: 0 1px 2px rgba(14,31,26,.12), 0 4px 14px rgba(14,31,26,.06); }
+.box { display: flex; align-items: center; gap: 12px; background: #FFFFFF; border: 1.5px solid #C5CFC9; border-radius: 18px; padding: 6px 6px 6px 20px; transition: border-color .25s ease, box-shadow .35s ease; }
+.box:focus-within { border-color: #0D6B45; box-shadow: 0 0 0 5px rgba(13,107,69,.13), 0 18px 40px -18px rgba(14,31,26,.3); }
+.box svg { width: 22px; height: 22px; flex: none; fill: none; stroke: #55605B; stroke-width: 1.7; stroke-linecap: round; }
+.box input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font: inherit; font-size: 21px; font-weight: 500; color: #0E1F1A; min-height: 56px; letter-spacing: .01em; }
+.box input::placeholder { color: #7A8782; font-weight: 400; }
+.dims { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.dim { background: #FFFFFF; border: 1.5px solid #C5CFC9; border-radius: 16px; padding: 10px 16px 8px; transition: border-color .25s ease, box-shadow .35s ease; }
+.dim:focus-within { border-color: #0D6B45; box-shadow: 0 0 0 5px rgba(13,107,69,.13); }
+.dim label { display: block; font-size: 13px; color: #55605B; }
+.dim div { display: flex; align-items: baseline; gap: 6px; }
+.dim input { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; font-family: 'IBM Plex Mono', monospace; font-size: 22px; font-weight: 500; color: #0E1F1A; min-height: 40px; }
+.dim input::placeholder { color: #9AA6A1; }
+.dim span { font-size: 14px; color: #55605B; }
+.try { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 16px; font-size: 15px; color: #55605B; }
+.try button { font-family: 'IBM Plex Mono', monospace; font-size: 14.5px; border: 1px solid #C5CFC9; background: transparent; color: #0E1F1A; min-height: 44px; padding: 0 16px; border-radius: 22px; cursor: pointer; transition: background .25s ease, border-color .25s ease, transform .25s ease; }
+.try button:hover { background: #FFFFFF; border-color: #0D6B45; transform: translateY(-1px); }
+
+/* resultados */
+.res { margin-top: 22px; background: #FFFFFF; border-radius: 20px; box-shadow: 0 1px 0 rgba(14,31,26,.06), 0 30px 60px -30px rgba(14,31,26,.35); overflow: hidden; animation: open .5s cubic-bezier(.16,.84,.24,1) both; }
+@keyframes open { from { opacity: 0; transform: translateY(-10px) scale(.985); } to { opacity: 1; transform: none; } }
+.res-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; padding: 16px 22px; border-bottom: 1px solid #E6EBE8; font-size: 14.5px; color: #55605B; }
+.res-head b { color: #0E1F1A; font-weight: 600; }
+.row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 18px; align-items: center; padding: 16px 22px; text-decoration: none; color: #0E1F1A; border-bottom: 1px solid #EEF2EF; transition: background .2s ease, padding-left .3s cubic-bezier(.16,.84,.24,1); animation: rowin .5s cubic-bezier(.16,.84,.24,1) both; }
+.row:hover { background: #F3F6F3; color: #0E1F1A; padding-left: 28px; }
+@keyframes rowin { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.row-part { font-family: 'IBM Plex Mono', monospace; font-size: 18px; font-weight: 500; }
+.row-brand { margin-bottom: 4px; }
+.row-meta { font-size: 14.5px; color: #55605B; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.tag { font-size: 13px; font-weight: 500; padding: 4px 10px; border-radius: 12px; background: #E4F3EB; color: #0A5C3B; }
+.tag.plain { background: #EEF2EF; color: #3D4A45; }
+.row-price { text-align: right; white-space: nowrap; }
+.row-price b { display: block; font-size: 21px; font-weight: 600; letter-spacing: -.01em; }
+.row-price span { font-size: 13px; color: #55605B; }
+.res-foot { padding: 14px 22px; font-size: 14px; color: #55605B; background: #F8FAF8; }
+.none { padding: 26px 22px; color: #3D4A45; }
+
+/* foto de portada */
+.art { position: relative; margin-top: 4px; aspect-ratio: 1; animation: fade 1.2s .3s ease both; }
+.halo { position: absolute; inset: 8% 6% 4%; border-radius: 50%; background: radial-gradient(closest-side, rgba(127,227,184,.55), rgba(127,227,184,0)); filter: blur(10px); animation: breathe 7s ease-in-out infinite; }
+.float { position: absolute; inset: 0; animation: float 7s ease-in-out infinite; }
+.float img { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; display: block; animation: tilt 14s ease-in-out infinite; }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+@keyframes tilt { 0%, 100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg); } }
+@keyframes breathe { 0%, 100% { opacity: .55; transform: scale(.94); } 50% { opacity: 1; transform: scale(1.04); } }
+.chip { position: absolute; display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 22px; background: rgba(255,255,255,.88); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); box-shadow: 0 10px 30px -14px rgba(14,31,26,.35); font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #0E1F1A; animation: fade .8s ease both; }
+.chip i { width: 8px; height: 8px; border-radius: 4px; background: #11914F; }
+.chip.c1 { left: 0; top: 16%; animation-delay: 1.2s; }
+.chip.c2 { right: 0; top: 46%; animation-delay: 1.45s; }
+.chip.c3 { left: 8%; bottom: 8%; animation-delay: 1.7s; }
+
+/* secciones */
+.sec { padding: 112px 0; }
+.sec h2 { font-stretch: 88%; font-weight: 600; font-size: clamp(34px, 4.2vw, 58px); line-height: 1.02; letter-spacing: -.022em; margin: 14px 0 0; max-width: 16em; }
+.sec-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 20px; margin-bottom: 52px; }
+.more { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-weight: 500; text-decoration: none; color: #0D6B45; }
+.more svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; transition: transform .3s cubic-bezier(.16,.84,.24,1); }
+.more:hover svg { transform: translateX(5px); }
+@supports (animation-timeline: view()) {
+  .rv { animation: rv linear both; animation-timeline: view(); animation-range: entry 0% entry 42%; }
+  @keyframes rv { from { opacity: 0; transform: translateY(42px); } to { opacity: 1; transform: none; } }
+}
+
+/* tipos de producto */
+@property --giro { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+.types { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.type { position: relative; isolation: isolate; display: flex; flex-direction: column; justify-content: space-between; min-height: 320px; padding: 26px; border-radius: 24px; background: #F3F6F3; color: #0E1F1A; text-decoration: none; overflow: hidden; transition: background .4s ease, transform .6s cubic-bezier(.16,.84,.24,1), box-shadow .5s ease; }
+.type::before { content: ''; position: absolute; inset: 0; z-index: 3; border-radius: inherit; padding: 2px; background: conic-gradient(from var(--giro), rgba(17,145,79,0) 0deg, rgba(17,145,79,0) 200deg, #7FE3B8 290deg, #11914F 330deg, rgba(17,145,79,0) 360deg); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0; transition: opacity .45s ease; animation: giro 2.6s linear infinite; pointer-events: none; }
+@keyframes giro { to { --giro: 360deg; } }
+.type:hover, .type:focus-visible { background: #EDF5F0; color: #0E1F1A; transform: translateY(-6px); box-shadow: 0 0 0 1.5px rgba(17,145,79,.55), 0 0 34px -2px rgba(31,201,120,.42), 0 30px 60px -30px rgba(13,107,69,.55); outline: none; }
+.type:hover::before, .type:focus-visible::before { opacity: 1; }
+.type > span { position: relative; z-index: 2; }
+.pic-w { position: absolute; z-index: 1; right: -4%; bottom: -6%; width: 66%; aspect-ratio: 1; animation: float 8s ease-in-out infinite; }
+.type:nth-child(3n+2) .pic-w { animation-delay: -2.6s; }
+.type:nth-child(3n) .pic-w { animation-delay: -5.2s; }
+.pic-w img { width: 100%; height: 100%; object-fit: contain; display: block; mix-blend-mode: multiply; transform-origin: 60% 60%; transition: transform 1s cubic-bezier(.16,.84,.24,1), filter .6s ease; }
+.type:hover .pic-w img, .type:focus-visible .pic-w img { transform: scale(1.16) translate(-4%, -5%) rotate(-3deg); filter: saturate(1.08) contrast(1.04); }
+.type .t { font-stretch: 90%; font-size: 26px; font-weight: 600; letter-spacing: -.012em; line-height: 1.1; }
+.type .s { font-size: 15px; color: #3D4A45; max-width: 12em; margin-top: 6px; }
+.type .go { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 22px; background: #FFFFFF; transition: background .3s ease, color .3s ease, transform .4s cubic-bezier(.16,.84,.24,1); }
+.type .go svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.type:hover .go { background: #11914F; color: #FFFFFF; transform: translateX(4px); }
+
+/* cifras y marcas */
+.big { background: #FFFFFF; padding: 40px 0 112px; }
+.big p { font-stretch: 88%; font-weight: 600; font-size: clamp(38px, 6vw, 92px); line-height: 1; letter-spacing: -.028em; margin: 0; }
+.big p em { font-style: normal; color: #9AA6A1; }
+.marq { margin-top: 64px; overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); }
+.marq div { display: flex; gap: 16px; width: max-content; padding: 10px 0; animation: marq 42s linear infinite; }
+.marq:hover div { animation-play-state: paused; }
+.marq span { display: inline-flex; align-items: center; min-height: 64px; padding: 0 30px; border-radius: 32px; background: var(--bg); color: var(--fg); box-shadow: inset 0 0 0 var(--lw, 1px) var(--ln, transparent); text-shadow: var(--ts, none); font-stretch: 110%; font-weight: 700; font-size: 26px; letter-spacing: .04em; white-space: nowrap; transition: transform .4s cubic-bezier(.16,.84,.24,1); }
+.marq span:hover { transform: translateY(-3px) scale(1.04); }
+.marq span em { font-style: normal; color: var(--ac); }
+.mk { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .08em; padding: 3px 9px; border-radius: 10px; background: var(--bg); color: var(--fg); box-shadow: inset 0 0 0 var(--lw, 1px) var(--ln, transparent); text-shadow: var(--ts, none); }
+.mk em { font-style: normal; color: var(--ac); }
+@keyframes marq { to { transform: translateX(-50%); } }
+
+/* entrega */
+.dark { background: #0A1D17; color: #FFFFFF; }
+.dark .kicker { color: #7FE3B8; }
+.dark h2 { color: #FFFFFF; }
+.three { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border-top: 1px solid rgba(255,255,255,.16); }
+.three div { padding: 34px 32px 8px 0; }
+.three div + div { padding-left: 32px; border-left: 1px solid rgba(255,255,255,.16); }
+.three .n { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #7FE3B8; letter-spacing: .1em; }
+.three h3 { font-stretch: 90%; font-size: 28px; font-weight: 600; letter-spacing: -.012em; line-height: 1.12; margin: 16px 0 12px; }
+.three p { margin: 0; color: #C3CFC9; font-size: 16.5px; }
+
+/* cotizador */
+.quote { background: #F3F6F3; }
+.quote .wrap { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 28px; align-items: center; }
+.btn { display: inline-flex; align-items: center; gap: 10px; min-height: 56px; padding: 0 28px; border-radius: 28px; background: #0D6B45; color: #FFFFFF; font-weight: 600; font-size: 17px; text-decoration: none; transition: background .25s ease, transform .3s cubic-bezier(.16,.84,.24,1), box-shadow .3s ease; }
+.btn:hover { background: #0A5C3B; color: #FFFFFF; transform: translateY(-2px); box-shadow: 0 16px 30px -14px rgba(13,107,69,.6); }
+.btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+/* pie */
+.foot { background: #FFFFFF; border-top: 1px solid #E6EBE8; padding: 44px 0 56px; font-size: 15px; color: #55605B; }
+.foot .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 18px 40px; }
+.foot nav { display: flex; flex-wrap: wrap; gap: 4px 22px; }
+.foot a { color: #3D4A45; text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; }
+.foot a:hover { color: #0D6B45; }
+
+@media (max-width: 900px) {
+  .hero .wrap { grid-template-columns: minmax(0, 1fr); padding-top: 56px; padding-bottom: 64px; }
+  .art { max-width: 380px; width: 100%; margin: 0 auto; }
+  .types { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .three { grid-template-columns: minmax(0, 1fr); }
+  .three div, .three div + div { padding: 28px 0; border-left: 0; }
+  .three div + div { border-top: 1px solid rgba(255,255,255,.16); }
+  .quote .wrap { grid-template-columns: minmax(0, 1fr); }
+  .sec { padding: 72px 0; }
+  .nav { order: 3; width: 100%; margin-left: 0; }
+  .cart { margin-left: auto; }
+}
+@media (max-width: 560px) {
+  .wrap { padding: 0 20px; }
+  .types { grid-template-columns: minmax(0, 1fr); }
+  .type { min-height: 260px; }
+  .pic-w { width: 58%; }
+  .row { grid-template-columns: minmax(0, 1fr); }
+  .row-price { text-align: left; }
+  .brand-sub { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pg *, .pg *::before, .pg *::after { animation: none !important; transition: none !important; }
+  .dimline { stroke-dashoffset: 0; }
+}
+</style>
+</helmet>
+<div class="pg">
+
+  <div class="top"><b>Envío gratis</b> en productos seleccionados</div>
+
+  <header class="hdr">
+    <div class="wrap">
+      <a class="brand" href="Main.dc.html" aria-label="DICOM, inicio">
+        <svg viewBox="-50 -44 100 88" aria-hidden="true">
+          <ellipse class="orb" rx="46" ry="15"></ellipse>
+          <ellipse class="orb o2" rx="46" ry="15"></ellipse>
+          <ellipse class="orb o3" rx="46" ry="15"></ellipse>
+          <path class="stem" d="M0 0 Q -1.5 5 -4 9"></path>
+          <path class="leaf" transform="rotate(45)" d="M0 0 C -4.5 -2 -6 -6.5 -3 -8 C -1.5 -8.8 0 -7.6 0 -6.4 C 0 -7.6 1.5 -8.8 3 -8 C 6 -6.5 4.5 -2 0 0 Z"></path>
+          <path class="leaf" transform="rotate(135)" d="M0 0 C -4.5 -2 -6 -6.5 -3 -8 C -1.5 -8.8 0 -7.6 0 -6.4 C 0 -7.6 1.5 -8.8 3 -8 C 6 -6.5 4.5 -2 0 0 Z"></path>
+          <path class="leaf" transform="rotate(225)" d="M0 0 C -4.5 -2 -6 -6.5 -3 -8 C -1.5 -8.8 0 -7.6 0 -6.4 C 0 -7.6 1.5 -8.8 3 -8 C 6 -6.5 4.5 -2 0 0 Z"></path>
+          <path class="leaf" transform="rotate(315)" d="M0 0 C -4.5 -2 -6 -6.5 -3 -8 C -1.5 -8.8 0 -7.6 0 -6.4 C 0 -7.6 1.5 -8.8 3 -8 C 6 -6.5 4.5 -2 0 0 Z"></path>
+        </svg>
+        <span>
+          <span class="brand-name">DICOM</span>
+          <span class="brand-sub">Distribuciones Industriales COM</span>
+        </span>
+      </a>
+      <nav class="nav" aria-label="Principal">
+        <a href="#tipos">Catálogo</a>
+        <a href="#marcas">Marcas</a>
+        <a href="#cotizador">Cotizador</a>
+        <a href="#cuenta">Mi cuenta</a>
+      </nav>
+      <a class="cart" href="Pago.dc.html">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2.2l2.3 11h10.2l2-8H6.4"></path><circle cx="9.5" cy="19" r="1.3"></circle><circle cx="16.5" cy="19" r="1.3"></circle></svg>
+        Carrito
+      </a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <div class="kicker">Rodamientos y transmisión industrial</div>
+        <h1>
+          <span><i>La pieza exacta,</i></span>
+          <span><i>lista para salir</i></span>
+          <span><i>hoy mismo.</i></span>
+        </h1>
+        <p class="lede">Rodamientos, chumaceras, retenes, bandas y cadenas de las marcas que ya usas. Búscalos por número de parte o por medida.</p>
+
+        <div class="finder">
+          <div class="modes" role="group" aria-label="Forma de buscar">
+            <button type="button" aria-pressed="{{porParte}}" onClick="{{usarParte}}">Número de parte</button>
+            <button type="button" aria-pressed="{{porMedida}}" onClick="{{usarMedida}}">Por medida</button>
+          </div>
+
+          <sc-if value="{{porParte}}" hint-placeholder-val="{{ true }}">
+            <label class="box">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="M16 16l4.5 4.5"></path></svg>
+              <input type="text" inputmode="text" autocomplete="off" spellcheck="false" aria-label="Número de parte" placeholder="Escribe el número, por ejemplo 6205" value="{{q}}" onChange="{{alEscribir}}">
+            </label>
+            <div class="try">
+              Prueba con
+              <button type="button" class="mono" onClick="{{ej6203}}">6203</button>
+              <button type="button" class="mono" onClick="{{ej6205}}">6205</button>
+              <button type="button" class="mono" onClick="{{ej22216}}">22216</button>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{porMedida}}" hint-placeholder-val="{{ false }}">
+            <div class="dims">
+              <div class="dim">
+                <label for="m-d">Diámetro interior</label>
+                <div><input id="m-d" type="text" inputmode="decimal" autocomplete="off" placeholder="25" value="{{md}}" onChange="{{alMd}}"><span>mm</span></div>
+              </div>
+              <div class="dim">
+                <label for="m-D">Diámetro exterior</label>
+                <div><input id="m-D" type="text" inputmode="decimal" autocomplete="off" placeholder="52" value="{{mD}}" onChange="{{alMD}}"><span>mm</span></div>
+              </div>
+              <div class="dim">
+                <label for="m-B">Ancho</label>
+                <div><input id="m-B" type="text" inputmode="decimal" autocomplete="off" placeholder="15" value="{{mB}}" onChange="{{alMB}}"><span>mm</span></div>
+              </div>
+            </div>
+            <div class="try">
+              Prueba con
+              <button type="button" class="mono" onClick="{{ejMedida1}}">17 × 40 × 12</button>
+              <button type="button" class="mono" onClick="{{ejMedida2}}">25 × 52 × 15</button>
+              <button type="button" class="mono" onClick="{{ejMedida3}}">80 × 140 × 33</button>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{hayResultados}}" hint-placeholder-val="{{ false }}">
+            <div class="res" aria-live="polite">
+              <div class="res-head">
+                <span><b>{{cuenta}}</b> para <b class="mono">{{buscado}}</b></span>
+                <span>{{medidaComun}}</span>
+              </div>
+              <sc-for list="{{resultados}}" as="r" hint-placeholder-count="4">
+                <a class="row" href="Producto.dc.html" style="animation-delay: {{r.retraso}}">
+                  <span>
+                    <span class="row-brand"><span class="mk" style="{{r.estiloMarca}}">{{r.marca}}</span></span>
+                    <span class="row-part" style="display: block">{{r.parte}}</span>
+                    <span class="row-meta">{{r.tipo}} · {{r.medida}}</span>
+                    <span class="tags">
+                      <sc-if value="{{r.hoy}}" hint-placeholder-val="{{ true }}"><span class="tag">Se envía hoy si compras antes de las 2 p.m.</span></sc-if>
+                      <sc-if value="{{r.otra}}" hint-placeholder-val="{{ false }}"><span class="tag plain">Existencia en otra sucursal</span></sc-if>
+                      <span class="tag plain">Envío gratis</span>
+                    </span>
+                  </span>
+                  <span class="row-price"><b>{{r.precio}}</b><span>más IVA</span></span>
+                </a>
+              </sc-for>
+              <div class="res-foot">Precios por pieza en pesos mexicanos, más IVA. Abre un producto para ver medidas completas y agregarlo al carrito.</div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{sinResultados}}" hint-placeholder-val="{{ false }}">
+            <div class="res" aria-live="polite">
+              <div class="none">No encontramos <b class="mono">{{buscado}}</b>. Revisa el número o <a href="#cotizador">pídelo en el cotizador</a> y lo buscamos por ti.</div>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+
+      <div class="art" aria-hidden="true">
+        <div class="halo"></div>
+        <div class="float"><img src="/_blob/0c3b5eac00af0988dfc633ac8b9491fd" alt=""></div>
+        <span class="chip c1"><i></i>d 25 mm</span>
+        <span class="chip c2"><i></i>D 52 mm</span>
+        <span class="chip c3"><i></i>B 15 mm</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="tipos">
+    <div class="wrap">
+      <div class="sec-top rv">
+        <div>
+          <div class="kicker">Catálogo</div>
+          <h2>Empieza por el tipo de pieza.</h2>
+        </div>
+        <a class="more" href="#tipos">Ver todo el catálogo <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+      </div>
+
+      <div class="types">
+        <a class="type rv" href="#tipos">
+          <span class="pic-w" aria-hidden="true"><img src="/_blob/0333af2d86c7d54b8b8d8b4b54735c4a" alt="" loading="lazy"></span>
+          <span><span class="t" style="display: block">Rodamientos de bolas</span><span class="s" style="display: block">Rígidos, de contacto angular y oscilantes</span></span>
+          <span class="go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+        </a>
+        <a class="type rv" href="#tipos">
+          <span class="pic-w" aria-hidden="true"><img src="/_blob/79e81387619d719fa241d926c4bd6983" alt="" loading="lazy"></span>
+          <span><span class="t" style="display: block">Rodamientos de rodillos</span><span class="s" style="display: block">Cónicos, esféricos, cilíndricos y de agujas</span></span>
+          <span class="go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+        </a>
+        <a class="type rv" href="#tipos">
+          <span class="pic-w" aria-hidden="true"><img src="/_blob/a98e0bc8bcc62a47a83731e88a88674c" alt="" loading="lazy"></span>
+          <span><span class="t" style="display: block">Chumaceras</span><span class="s" style="display: block">De piso, de pared y tensoras</span></span>
+          <span class="go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+        </a>
+        <a class="type rv" href="#tipos">
+          <span class="pic-w" aria-hidden="true"><img src="/_blob/54258ec53a109bb41c67ff11702acb98" alt="" loading="lazy"></span>
+          <span><span class="t" style="display: block">Retenes</span><span class="s" style="display: block">De nitrilo y de vitón</span></span>
+          <span class="go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+        </a>
+        <a class="type rv" href="#tipos">
+          <span class="pic-w" aria-hidden="true"><img src="/_blob/7e87e2e4032c72dff85f72dccf9d123c" alt="" loading="lazy"></span>
+          <span><span class="t" style="display: block">Bandas</span><span class="s" style="display: block">En V, dentadas y de sincronía</span></span>
+          <span class="go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+        </a>
+        <a class="type rv" href="#tipos">
+          <span class="pic-w" aria-hidden="true"><img src="/_blob/6546a679cbe4dec2985592a2e2284f90" alt="" loading="lazy"></span>
+          <span><span class="t" style="display: block">Cadenas</span><span class="s" style="display: block">De rodillos, candados y medios pasos</span></span>
+          <span class="go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+        </a>
+        <a class="type rv" href="#tipos">
+          <span class="pic-w" aria-hidden="true"><img src="/_blob/a89a9587bdeb59c2dc8643bb003e9b76" alt="" loading="lazy"></span>
+          <span><span class="t" style="display: block">Catarinas</span><span class="s" style="display: block">Sencillas, dobles y con maza</span></span>
+          <span class="go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+        </a>
+        <a class="type rv" href="#tipos">
+          <span class="pic-w" aria-hidden="true"><img src="/_blob/4f04fc59c240afe40a2a745fc34187c3" alt="" loading="lazy"></span>
+          <span><span class="t" style="display: block">Poleas</span><span class="s" style="display: block">De una o varias ranuras</span></span>
+          <span class="go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+        </a>
+        <a class="type rv" href="#tipos">
+          <span class="pic-w" aria-hidden="true"><img src="/_blob/e334b0b59528611d890ba9f1a78d4cad" alt="" loading="lazy"></span>
+          <span><span class="t" style="display: block">Bujes y coples</span><span class="s" style="display: block">Bujes cónicos y coples flexibles</span></span>
+          <span class="go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="big" id="marcas">
+    <div class="wrap">
+      <p class="rv">45,864 productos. <em>103 marcas.</em> Una sola búsqueda.</p>
+    </div>
+    <div class="marq" aria-label="Marcas: Fag, Ina, Timken, Skf, Fersa, Isb, Translink, Optibelt, McGill, Nke, Snr, Nbi">
+      <div aria-hidden="true">
+        <span style="--bg:#E3000F;--fg:#FFFFFF">FAG</span><span style="--bg:#00893D;--fg:#FFFFFF">INA</span><span style="--bg:#F47920;--fg:#FFFFFF">TIMKEN</span><span style="--bg:#0F58A8;--fg:#FFFFFF">SKF</span><span style="--bg:#3AA8E0;--fg:#FFFFFF">FERSA</span><span style="--bg:#7AC943;--fg:#FFFFFF">ISB</span><span style="--bg:#FFFFFF;--fg:#0E1F1A;--ln:rgba(14,31,26,.18)">TRANSLINK</span><span style="--bg:#111414;--fg:#FFFFFF">OPTIBELT</span><span style="--bg:#111414;--fg:#FFFFFF;--ac:#E3000F">Mc<em>GILL</em></span><span style="--bg:#0B4EA2;--fg:#FFFFFF;--ln:#3DB54A;--lw:3px">NKE</span><span style="--bg:#F7C600;--fg:#FFFFFF;--ts:0 1px 1px rgba(90,60,0,.45)">SNR</span><span style="--bg:#1D3F8C;--fg:#FFFFFF">NBI</span>
+        <span style="--bg:#E3000F;--fg:#FFFFFF">FAG</span><span style="--bg:#00893D;--fg:#FFFFFF">INA</span><span style="--bg:#F47920;--fg:#FFFFFF">TIMKEN</span><span style="--bg:#0F58A8;--fg:#FFFFFF">SKF</span><span style="--bg:#3AA8E0;--fg:#FFFFFF">FERSA</span><span style="--bg:#7AC943;--fg:#FFFFFF">ISB</span><span style="--bg:#FFFFFF;--fg:#0E1F1A;--ln:rgba(14,31,26,.18)">TRANSLINK</span><span style="--bg:#111414;--fg:#FFFFFF">OPTIBELT</span><span style="--bg:#111414;--fg:#FFFFFF;--ac:#E3000F">Mc<em>GILL</em></span><span style="--bg:#0B4EA2;--fg:#FFFFFF;--ln:#3DB54A;--lw:3px">NKE</span><span style="--bg:#F7C600;--fg:#FFFFFF;--ts:0 1px 1px rgba(90,60,0,.45)">SNR</span><span style="--bg:#1D3F8C;--fg:#FFFFFF">NBI</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec dark">
+    <div class="wrap">
+      <div class="sec-top rv">
+        <div>
+          <div class="kicker">Entrega y factura</div>
+          <h2>Cada producto te dice cuándo sale y si el envío va por nuestra cuenta.</h2>
+        </div>
+      </div>
+      <div class="three">
+        <div class="rv">
+          <span class="n">01</span>
+          <h3>Se envía hoy si compras antes de las 2 p.m.</h3>
+          <p>Aplica cuando la pieza está en Ciudad de México, de lunes a viernes. El tiempo restante es el de la paquetería.</p>
+        </div>
+        <div class="rv">
+          <span class="n">02</span>
+          <h3>Envío gratis en productos seleccionados</h3>
+          <p>A todo México. Lo verás indicado en cada producto antes de comprar.</p>
+        </div>
+        <div class="rv">
+          <span class="n">03</span>
+          <h3>Factura CFDI 4.0 con cada pedido</h3>
+          <p>Guarda tus datos fiscales una vez y recibe el PDF y el XML por correo al pagar.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec quote" id="cotizador">
+    <div class="wrap">
+      <div class="rv">
+        <div class="kicker">Cotizador</div>
+        <h2>¿Traes una lista larga? Cotízala completa y recíbela en PDF.</h2>
+      </div>
+      <a class="btn rv" href="#cotizador">Abrir el cotizador <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <div class="wrap">
+      <div>DICOM · Distribuciones Industriales COM</div>
+      <nav aria-label="Pie de página">
+        <a href="#tipos">Catálogo</a>
+        <a href="#cotizador">Cotizador</a>
+        <a href="#cuenta">Mi cuenta</a>
+        <a href="#privacidad">Aviso de privacidad</a>
+        <a href="#terminos">Términos y condiciones</a>
+      </nav>
+    </div>
+  </footer>
+
+</div>
+<div style="box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; padding: 16px; background-color: #ffffff; border-radius: 2px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); position: absolute; left: 1028px; top: 3846px; width: 200px; height: 96px"></div></x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":4300}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { modo: 'parte', q: '', md: '', mD: '', mB: '' };
+  }
+
+  catalogo() {
+    var rig = 'Rodamiento rígido de bolas';
+    var esf = 'Rodamiento de rodillos esféricos';
+    return [
+      { parte: '6205-2RSR', marca: 'FAG', tipo: rig, d: 25, D: 52, B: 15, precio: 95.10, cdmx: 41, total: 192 },
+      { parte: '6205-2RS', marca: 'TRANSLINK', tipo: rig, d: 25, D: 52, B: 15, precio: 49.43, cdmx: 2885, total: 3747 },
+      { parte: '6205-2RS2', marca: 'NKE', tipo: rig, d: 25, D: 52, B: 15, precio: 66.79, cdmx: 806, total: 947 },
+      { parte: '6205-2RS C3', marca: 'FERSA', tipo: rig, d: 25, D: 52, B: 15, precio: 56.18, cdmx: 227, total: 403 },
+      { parte: '6205-2RS', marca: 'TIMKEN', tipo: rig, d: 25, D: 52, B: 15, precio: 112.81, cdmx: 730, total: 804 },
+      { parte: '6205-2RSH', marca: 'SKF', tipo: rig, d: 25, D: 52, B: 15, precio: 240.42, cdmx: 414, total: 485 },
+      { parte: '6203-2RSR', marca: 'FAG', tipo: rig, d: 17, D: 40, B: 12, precio: 55.51, cdmx: 1756, total: 5148 },
+      { parte: '6203-2Z', marca: 'FAG', tipo: rig, d: 17, D: 40, B: 12, precio: 51.05, cdmx: 3899, total: 9081 },
+      { parte: '6203-2RS C3', marca: 'TRANSLINK', tipo: rig, d: 17, D: 40, B: 12, precio: 29.29, cdmx: 3575, total: 4921 },
+      { parte: '6203-2Z C3', marca: 'SNR', tipo: rig, d: 17, D: 40, B: 12, precio: 44.76, cdmx: 2145, total: 2176 },
+      { parte: '6203-2RSH C3', marca: 'SKF', tipo: rig, d: 17, D: 40, B: 12, precio: 108.34, cdmx: 2745, total: 3163 },
+      { parte: '22216-E1', marca: 'FAG', tipo: esf, d: 80, D: 140, B: 33, precio: 2106.68, cdmx: 39, total: 125 },
+      { parte: '22216 CC C3 W33', marca: 'TRANSLINK', tipo: esf, d: 80, D: 140, B: 33, precio: 1053.82, cdmx: 104, total: 107 },
+      { parte: '22216 E W33', marca: 'NBI', tipo: esf, d: 80, D: 140, B: 33, precio: 1422.07, cdmx: 40, total: 40 }
+    ];
+  }
+
+  colorMarca(m) {
+    var c = {
+      FAG: '--bg:#E3000F;--fg:#FFFFFF', INA: '--bg:#00893D;--fg:#FFFFFF', TIMKEN: '--bg:#F47920;--fg:#FFFFFF',
+      SKF: '--bg:#0F58A8;--fg:#FFFFFF', FERSA: '--bg:#3AA8E0;--fg:#FFFFFF', ISB: '--bg:#7AC943;--fg:#FFFFFF',
+      TRANSLINK: '--bg:#FFFFFF;--fg:#0E1F1A;--ln:rgba(14,31,26,.22)', OPTIBELT: '--bg:#111414;--fg:#FFFFFF',
+      MCGILL: '--bg:#111414;--fg:#E3000F', NKE: '--bg:#0B4EA2;--fg:#FFFFFF;--ln:#3DB54A;--lw:3px', SNR: '--bg:#F7C600;--fg:#FFFFFF;--ts:0 1px 1px rgba(90,60,0,.45)',
+      NBI: '--bg:#1D3F8C;--fg:#FFFFFF'
+    };
+    return c[String(m).toUpperCase()] || '--bg:#E4F3EB;--fg:#0A5C3B';
+  }
+
+  clave(texto) {
+    return String(texto || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+  }
+
+  pesos(n) {
+    return '$' + n.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  buscar() {
+    var s = this.state;
+    var todo = this.catalogo();
+    if (s.modo === 'parte') {
+      var k = this.clave(s.q);
+      if (k.length < 2) return null;
+      return todo.filter((p) => this.clave(p.parte).indexOf(k) === 0);
+    }
+    var num = function (v) { var n = parseFloat(String(v).replace(',', '.')); return isNaN(n) ? null : n; };
+    var d = num(s.md), D = num(s.mD), B = num(s.mB);
+    if (d === null && D === null && B === null) return null;
+    return todo.filter(function (p) {
+      return (d === null || p.d === d) && (D === null || p.D === D) && (B === null || p.B === B);
+    });
+  }
+
+  renderVals() {
+    var s = this.state;
+    var hallados = this.buscar();
+    var activo = hallados !== null;
+    var lista = (hallados || []).map((p, i) => ({
+      parte: p.parte,
+      marca: p.marca,
+      estiloMarca: this.colorMarca(p.marca),
+      tipo: p.tipo,
+      medida: p.d + ' × ' + p.D + ' × ' + p.B + ' mm',
+      precio: this.pesos(p.precio),
+      hoy: p.cdmx > 0,
+      otra: p.cdmx === 0 && p.total > 0,
+      retraso: (i * 0.05) + 's'
+    }));
+    var medidas = {};
+    lista.forEach(function (r) { medidas[r.medida] = true; });
+    var unicas = Object.keys(medidas);
+    var buscado = s.modo === 'parte'
+      ? s.q.trim()
+      : [s.md || '·', s.mD || '·', s.mB || '·'].join(' × ') + ' mm';
+    var fijar = (q) => () => this.setState({ modo: 'parte', q: q });
+    var medir = (d, D, B) => () => this.setState({ modo: 'medida', md: d, mD: D, mB: B });
+
+    return {
+      porParte: s.modo === 'parte',
+      porMedida: s.modo === 'medida',
+      q: s.q, md: s.md, mD: s.mD, mB: s.mB,
+      usarParte: () => this.setState({ modo: 'parte' }),
+      usarMedida: () => this.setState({ modo: 'medida' }),
+      alEscribir: (e) => this.setState({ q: e.target.value }),
+      alMd: (e) => this.setState({ md: e.target.value }),
+      alMD: (e) => this.setState({ mD: e.target.value }),
+      alMB: (e) => this.setState({ mB: e.target.value }),
+      ej6203: fijar('6203'),
+      ej6205: fijar('6205'),
+      ej22216: fijar('22216'),
+      ejMedida1: medir('17', '40', '12'),
+      ejMedida2: medir('25', '52', '15'),
+      ejMedida3: medir('80', '140', '33'),
+      resultados: lista,
+      hayResultados: activo && lista.length > 0,
+      sinResultados: activo && lista.length === 0,
+      cuenta: lista.length === 1 ? '1 resultado' : lista.length + ' resultados',
+      buscado: buscado,
+      medidaComun: s.modo === 'parte' && unicas.length === 1 ? 'Medida ' + unicas[0] : ''
+    };
+  }
+}
+</script>
+</body>
+</html>
